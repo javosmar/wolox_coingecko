@@ -6,72 +6,54 @@ const { Router } = require('express');
 const router = Router();
 const passport = require('passport');
 const https = require('https');
+const axios = require('axios');
 
 let promisesArray = [];
+
+async function getCryptos() {
+    try {
+        const response = await axios.get('https://api.coingecko.com/api/v3/coins/list');
+        return response.data;
+    }
+    catch (error) {
+        console.log(error);
+    }
+}
+
+async function getInfo(id) {
+    try {
+        const response = await axios.get('https://api.coingecko.com/api/v3/coins/' + id);
+        return response.data;
+    }
+    catch (error) {
+        console.log(error);
+    }
+}
 
 /**
  * Ruta que devuelve datos no protegidos
  */
 router.get('/list-all', passport.authenticate('jwt', { session: false }), async (req, res) => {
-    const cryptos = ['01coin', 'arion', 'ark'];
+    // const cryptos = ['01coin', 'arion', 'ark'];
     let cryptosInfo = [];
 
-    let getCoins = (coin) => {
-        return new Promise((resolve, reject) => {
-            let req = https.get('https://api.coingecko.com/api/v3/coins/' + coin, (response) => {
-                let data = '';
-                response.on('data', (d) => {
-                    data += d;
-                });
-                response.on('end', () => {
-                    try {
-                        let listDisponibles = JSON.parse(data);
-                        resolve(listDisponibles);
-                    }
-                    catch (ex) {
-                        reject(ex);
-                    }
-                });
-            })
-                .on('error', (error) => {
-                    res.json({ msg: error });
-                });
-
-        });
+    const cryptos = await getCryptos();
+    console.log(cryptos[0].id)
+    res.json(cryptos);
+    /* for (let i = 0; i < cryptos.length; i++) {
+        cryptosInfo.push(await getInfo(cryptos[i].id));
     }
+    res.json(cryptosInfo) */;
 
-    for (let i = 0; i < cryptos.length; i++) {
-        promisesArray.push(getCoins(cryptos[i]));
-    }
-
-    Promise.all(promisesArray).then((result) => {
-        for(let i = 0; i < promisesArray.length; i++){
-            const coin = {
-                symbol: result[i].symbol,
-                name: result[i].name,
-                image: result[i].image.large,
-            }
-            cryptosInfo.push(coin);
-        }
-        console.log(cryptosInfo);
-        res.json(cryptosInfo);
-    });
-
-    /* https.get('https://api.coingecko.com/api/v3/coins/list', (response) => {
-        let data = '';
-        response.on('data', (d) => {
-            data += d;
-        });
-        response.on('end', () => {
-            let listDisponibles = JSON.parse(data);
-            const coinId = listDisponibles;
-            console.log(coinId);
-            res.json(listDisponibles);
-        });
-    })
-    .on('error', (error) => {
-        res.json({ msg: error });
+    /* Promise.all([getCryptos(), getInfo('01coin')])
+    .then(function(results) {
+        const cryptosArray = results[0].data;
+        const infoArray = results[1].data;
+        console.log(cryptosArray);
+        res.json(infoArray);
     }); */
+
+    
 });
 
 /**
