@@ -4,6 +4,6 @@
 
 module.exports = {
     jwtSecret: 'secret_key',
-    db: 'mongodb://mongo/api_db',
-    expires_in: 20
+    expires_in: 86400,
+    db: 'mongodb://mongo/api_db'
 }

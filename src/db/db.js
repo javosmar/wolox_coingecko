@@ -1,12 +1,12 @@
 /**
- * Contiene la conexión a mongodb
+ * Contiene la conexión a MongoDB
  */
 
 const mongoose = require('mongoose');
 const config = require('../config/config');
 const { MONGO_USERNAME, MONGO_PASSWORD } = require('../config/keys');
 
-// Create the URL for connect to DB
+// Opciones para la conexión a la DB
 const options = {
     useNewUrlParser: true,
     useUnifiedTopology: true,
@@ -18,14 +18,14 @@ const options = {
     "pass": MONGO_PASSWORD
 };
 
-// DB Connection
+// Conexión a MongoDB
 mongoose.connect(config.db, options);
 const connection = mongoose.connection;
 connection.once('open', () => {
-    console.log('MongoDB database connection established succesfully!');
+    console.log('Conexión a MongoDB establecida');
 });
 connection.on('error', (err) => {
-    console.log('MongoDB connection error.' + err);
+    console.log('Error de conexión a MongoDB.' + err);
     process.exit();
 });
 
