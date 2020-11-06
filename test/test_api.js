@@ -196,6 +196,8 @@ describe('Un usuario debe poder ', () => {
             .set({ 'Authorization': `Bearer ${token}` })
             .end((err, res) => {
                 expect(res).to.have.status(200);
+                const topN = res.body;
+                expect(topN).to.have.lengthOf.at.most(25);
                 done();
             });
     });

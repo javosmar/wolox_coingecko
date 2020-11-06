@@ -8,17 +8,18 @@ const config = require('../config/config');
 
 
 /**
- * Funcion para validar la conformación de la contraseña (debe tener longitud > 7 y caracteres alfanuméricos)
+ * Valida la conformación de la contraseña (longitud > 7 y sólo caracteres alfanuméricos)
  * @param pass String 
  */
 function validarPassword(pass) {
-    var caracteres = /[a-zA-Z0-9]/;
-    const alfanum = caracteres.test(pass);
+    // Prueba la contraseña contra la expresión regular en busca de caracteres que no sean alfanuméricos
+    var caracteres = /^[a-z0-9]+$/i;
+    var alfanum = caracteres.test(pass);
     const longitud = pass.length > 7 ? true : false;
-    if (!alfanum && longitud) {
-        return false;
+    if (alfanum && longitud) {
+        return true;
     }
-    return true;
+    return false;
 }
 
 /**
@@ -36,7 +37,7 @@ function createToken(user) {
  * que el username no exista previamente en la DB.
  * Responde con el token creado para la sesión.
  */
-exports.registerUser = (req, res) => {
+exports.registerUser = async (req, res) => {
     const { nombre, apellido, username, password, moneda } = req.body;
     const monedasAdmitidas = ['usd', 'ars', 'eur'];
     if (!nombre || !apellido || !username || !password || !moneda) {
@@ -49,7 +50,7 @@ exports.registerUser = (req, res) => {
         return res.status(400).json({ 'msg': 'Moneda no admitida' });
     }
     else {
-        User.findOne({ username: username }, (err, user) => {
+        await User.findOne({ username: username }, async (err, user) => {
             if (err) {
                 return res.status(500).json({ 'msg': err });
             }
@@ -58,7 +59,7 @@ exports.registerUser = (req, res) => {
             }
             else {
                 const newUser = User(req.body);
-                newUser.save((err, user) => {
+                await newUser.save((err, user) => {
                     if (err) {
                         return res.status(500).json({ 'msg': err });
                     }
@@ -74,11 +75,11 @@ exports.registerUser = (req, res) => {
  * y que el password recibido concuerde con el almacenado.
  * Responde con el token creado para la sesión.
  */
-exports.loginUser = (req, res) => {
+exports.loginUser = async (req, res) => {
     if (!req.body.username || !req.body.password) {
         return res.status(400).json({ 'msg': 'Datos insuficientes' });
     }
-    User.findOne({ username: req.body.username }, (err, user) => {
+    await User.findOne({ username: req.body.username }, (err, user) => {
         if (err) {
             return res.status(500).json({ 'msg': err });
         }

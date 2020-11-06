@@ -13,8 +13,8 @@ let options = {
     secretOrKey: config.jwtSecret
 }
 
-module.exports = new JwtStrategy(options, function (jwt_payload, done) {
-    User.findById(jwt_payload.id, function (err, user) {
+module.exports = new JwtStrategy(options, async (jwt_payload, done) => {
+    await User.findById(jwt_payload.id, function (err, user) {
         if (err) {
             return done(err, false);
         }

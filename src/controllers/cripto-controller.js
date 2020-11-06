@@ -47,15 +47,13 @@ exports.addCripto = async (req, res) => {
     const { username } = req.user;
     const { criptomoneda } = req.body;
     const relacion = {username: username, criptomoneda: criptomoneda};
-    console.log(relacion);
     const moneda = this.criptosList.find(elemento => elemento.symbol == relacion.criptomoneda);
     if(moneda){
-        UserCripto.findOne({ username: username, criptomoneda: criptomoneda }, (err, cripto) => {
+        await UserCripto.findOne({ username: username, criptomoneda: criptomoneda }, (err, cripto) => {
             if (err) {
                 return res.status(500).json({ 'msg': err });
             }
             if (cripto) {
-                console.log("existe la relacion");
                 return res.status(400).json({ 'msg': 'El usuario ya posee posee la criptomoneda' });
             }
             else {
@@ -70,14 +68,13 @@ exports.addCripto = async (req, res) => {
         });
     }
     else {
-        console.log("la cripto no existe");
         return res.status(400).json({ 'msg': 'No existe la criptomoneda' });
     }
-    
-    // console.log(username, criptomoneda);
-    // return res.json({ msg: 'Criptomoneda agregada con éxito' });
 };
 
 exports.listUserCripto = async (req, res) => {
-    return res.json({ msg: 'aca va la cripto del user' });
+    const { username } = req.user;
+    console.log(username);
+    
+    return res.json([{ msg: 'aca va la cripto del user' }]);
 }

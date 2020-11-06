@@ -23,30 +23,4 @@ router.post('/add', passport.authenticate('jwt', { session: false }), userCripto
  */
 router.get('/list-user', passport.authenticate('jwt', { session: false }), userCripto.listUserCripto);
 
-/**
- * Ruta que devuelve datos protegidos
- */
-router.get('/private', passport.authenticate('jwt', { session: false }), (req, res) => {
-    res.json([
-        {
-            _id: 1,
-            name: 'Private one',
-            description: 'Lorem impsum',
-            date: "2020-11-15T20:30:32.211Z"
-        },
-        {
-            _id: 2,
-            name: 'Private two',
-            description: 'Lorem impsum',
-            date: "2020-11-15T20:30:32.211Z"
-        },
-        {
-            _id: 3,
-            name: 'Private tree',
-            description: 'Lorem impsum',
-            date: "2020-11-15T20:30:32.211Z"
-        }
-    ]);
-});
-
 module.exports = router;
