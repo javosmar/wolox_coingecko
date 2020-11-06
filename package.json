@@ -4,6 +4,7 @@
   "description": "Ejercicio tecnico para entrevista",
   "main": "index.js",
   "scripts": {
+    "test": "mocha ./test/test_api.js --timeout 15000",
     "dev": "nodemon ./src/index.js"
   },
   "author": "Martin Acosta",
@@ -18,6 +19,10 @@
     "passport-jwt": "^4.0.0"
   },
   "devDependencies": {
+    "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
+    "chai-jwt": "^2.0.0",
+    "mocha": "^8.2.1",
     "morgan": "^1.10.0",
     "nodemon": "^2.0.6"
   }

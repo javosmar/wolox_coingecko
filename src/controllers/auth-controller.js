@@ -6,6 +6,21 @@ let User = require('../models/user');
 const jwt = require('jsonwebtoken');
 const config = require('../config/config');
 
+
+/**
+ * Funcion para validar la conformación de la contraseña (debe tener longitud > 7 y caracteres alfanuméricos)
+ * @param pass String 
+ */
+function validarPassword(pass) {
+    var caracteres = /[a-zA-Z0-9]/;
+    const alfanum = caracteres.test(pass);
+    const longitud = pass.length > 7 ? true : false;
+    if (!alfanum && longitud) {
+        return false;
+    }
+    return true;
+}
+
 /**
  * Crea el token conteniendo el id, el username y el expiresin
  * @param {nombre, apellido, username, password, moneda} user Objeto usuario 
@@ -27,13 +42,16 @@ exports.registerUser = (req, res) => {
     if (!nombre || !apellido || !username || !password || !moneda) {
         return res.status(400).json({ 'msg': 'Datos insuficientes para el registro' });
     }
-    else if(!monedasAdmitidas.includes(moneda)) {
-        return res.status(400).json({'msg': 'Moneda no admitida'});
+    else if (!validarPassword(password)) {
+        return res.status(400).json({ 'msg': 'La contraseña debe contener la menos 8 caracteres alfanuméricos' });
+    }
+    else if (!monedasAdmitidas.includes(moneda)) {
+        return res.status(400).json({ 'msg': 'Moneda no admitida' });
     }
     else {
         User.findOne({ username: username }, (err, user) => {
             if (err) {
-                return res.status(400).json({ 'msg': err });
+                return res.status(500).json({ 'msg': err });
             }
             if (user) {
                 return res.status(400).json({ 'msg': 'El usuario ya existe' });
@@ -42,18 +60,13 @@ exports.registerUser = (req, res) => {
                 const newUser = User(req.body);
                 newUser.save((err, user) => {
                     if (err) {
-                        console.log(err);
-                        return res.status(400).json({ 'msg': err });
+                        return res.status(500).json({ 'msg': err });
                     }
-                    return res.status(200).json({
-                        token: createToken(user)
-                    });
+                    return res.status(200).json({ 'msg': 'Usuario creado con éxito' });
                 });
             }
         });
     }
-
-
 };
 
 /**
@@ -65,15 +78,13 @@ exports.loginUser = (req, res) => {
     if (!req.body.username || !req.body.password) {
         return res.status(400).json({ 'msg': 'Datos insuficientes' });
     }
-
     User.findOne({ username: req.body.username }, (err, user) => {
         if (err) {
-            return res.status(400).json({ 'msg': err });
+            return res.status(500).json({ 'msg': err });
         }
         if (!user) {
             return res.status(400).json({ 'msg': 'Usuario o contraseña incorrectos' });
         }
-
         user.comparePassword(req.body.password, (err, isMatch) => {
             if (isMatch && !err) {
                 return res.status(200).json({
