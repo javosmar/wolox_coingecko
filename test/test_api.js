@@ -42,8 +42,8 @@ const userIncompleto = { nombre: "Test", apellido: "1", username: "testNuevo2", 
 const userPassCorto = { nombre: "Test", apellido: "1", username: "testLong", password: "hola123", moneda: "ars" };
 const userNuevo = { nombre: "Test", apellido: "1", username: "testNuevo"+Math.floor(Math.random()*100), password: "holitas123", moneda: "usd" };
 const userExistente = { nombre: "Test", apellido: "1", username: "testNuevo2", password: "holitas123", moneda: "ars" };
-const newCripto = { criptomoneda: 'btc' };
-let token;
+const newCripto = { criptomoneda: 'link' };
+// let token;
 
 describe('No debo poder crear un usuario ', () => {
     it('sin nombre, apellido, username, contraseña o moneda preferida', (done) => {
@@ -128,7 +128,7 @@ describe('El token debe ', () => {
     it('tener un tiempo de expiración', (done) => {
         chai.request(url)
             .post('/login')
-            .send({ username: userNuevo.username, password: userNuevo.password })
+            .send({ username: userExistente.username, password: userExistente.password })
             .end((err, res) => {
                 token = res.body.token;
                 expect(res).to.have.status(200);
@@ -198,6 +198,12 @@ describe('Un usuario debe poder ', () => {
                 expect(res).to.have.status(200);
                 const topN = res.body;
                 expect(topN).to.have.lengthOf.at.most(25);
+                const criptomoneda = res.body[0];
+                expect(criptomoneda).to.has.property('symbol');
+                expect(criptomoneda).to.has.property('current_price');
+                expect(criptomoneda).to.has.property('name');
+                expect(criptomoneda).to.has.property('image');
+                expect(criptomoneda).to.has.property('last_updated');
                 done();
             });
     });

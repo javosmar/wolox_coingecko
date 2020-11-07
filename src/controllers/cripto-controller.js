@@ -5,15 +5,25 @@
 let UserCripto = require('../models/usercripto');
 const axios = require('axios');
 
-let criptosList;
+let criptosList = [];
 
 /**
  * Obtiene el listado de criptomonedas disponibles con sus datos desde la API de Coingecko
  */
-async function getCriptos() {
-    try {
+async function getCriptos(moneda) {
+    try {        
         const response = await axios.get('https://api.coingecko.com/api/v3/coins');
-        return response.data;
+        criptosList = [];
+        const criptos = response.data;
+        for (let i = 0; i < criptos.length; i++) {
+            criptosList.push({
+                symbol: criptos[i].symbol,
+                current_price: criptos[i].market_data.current_price[moneda],
+                name: criptos[i].name,
+                image: criptos[i].image,
+                last_updated: criptos[i].last_updated
+            });
+        }
     }
     catch (error) {
         console.log(error);
@@ -26,18 +36,8 @@ async function getCriptos() {
  */
 exports.listCripto = async (req, res) => {
     const moneda = req.user.moneda;
-    this.criptosList = [];
-    const criptos = await getCriptos();
-    for (let i = 0; i < criptos.length; i++) {
-        this.criptosList.push({
-            symbol: criptos[i].symbol,
-            current_price: criptos[i].market_data.current_price[moneda],
-            name: criptos[i].name,
-            image: criptos[i].image,
-            last_updated: criptos[i].last_updated
-        })
-    }
-    return res.json(this.criptosList);
+    await getCriptos(moneda);
+    return res.json(criptosList);
 };
 
 /**
@@ -46,9 +46,11 @@ exports.listCripto = async (req, res) => {
 exports.addCripto = async (req, res) => {
     const { username } = req.user;
     const { criptomoneda } = req.body;
-    const relacion = {username: username, criptomoneda: criptomoneda};
-    const moneda = this.criptosList.find(elemento => elemento.symbol == relacion.criptomoneda);
-    if(moneda){
+    const relacion = { username: username, criptomoneda: criptomoneda };
+    const moneda = req.user.moneda;
+    await getCriptos(moneda);
+    const criptoExists = criptosList.find(elemento => elemento.symbol == relacion.criptomoneda);
+    if (criptoExists) {
         await UserCripto.findOne({ username: username, criptomoneda: criptomoneda }, (err, cripto) => {
             if (err) {
                 return res.status(500).json({ 'msg': err });
@@ -59,7 +61,7 @@ exports.addCripto = async (req, res) => {
             else {
                 const newCripto = UserCripto({ username, criptomoneda });
                 newCripto.save((err, cripto) => {
-                    if(err) {
+                    if (err) {
                         return res.status(500).json({ 'msg': err });
                     }
                     return res.status(200).json({ 'msg': 'Criptomoneda añadida con éxito' });
@@ -75,6 +77,8 @@ exports.addCripto = async (req, res) => {
 exports.listUserCripto = async (req, res) => {
     const { username } = req.user;
     console.log(username);
-    
+    const criptosUser = await UserCripto.find({ username: username });
+    console.log(criptosList);
+
     return res.json([{ msg: 'aca va la cripto del user' }]);
 }
