@@ -9,7 +9,8 @@
  * 
  * v No debo poder crear un usuario sin nombre, apellido, username, contraseña o moneda preferida
  * v No debo poder crear un usuario con username existente
- * v No debo poder crear un usuario con password de longitud menor a 8 caracteres alfanuméricos
+ * v No debo poder crear un usuario con password de longitud menor a 8 caracteres
+ * v No debo poder crear un usuario con password que no sea alfanumérico
  * v Debo poder crear un usuario con nombre, apellido, username, contraseña y moneda preferida
  * 
  * v No debo obtener el token al pasar un usuario no existente
@@ -21,7 +22,7 @@
  * v No debo poder agregar criptomonedas sin un token
  * 
  * v Un usuario debe poder obtener el listado de criptomonedas disponibles
- * x Un usuario debe poder obtener el listado de criptomonedas disponibles cotizadas solamente en su moneda preferida
+ * v Un usuario debe poder obtener el listado de criptomonedas disponibles cotizadas solamente en su moneda preferida
  * v Un usuario debe poder agregarse criptomonedas
  * v Un usuario debe poder obtener sus criptomonedas
  * v Un usuario debe poder obtener sus criptomonedas ordenadas ascendentemente en moneda preferida
@@ -43,6 +44,7 @@ chai.use(chaiJwt);
 const url = 'http://localhost:8000/api';
 const userIncompleto = { nombre: "Test", apellido: "1", username: "testNuevo2", password: "holitas123" };
 const userPassCorto = { nombre: "Test", apellido: "1", username: "testLong", password: "hola123", moneda: "ars" };
+const userPassAlfa = { nombre: "Test", apellido: "1", username: "testLong", password: "holitas@123", moneda: "ars" };
 const userNuevo = { nombre: "Test", apellido: "1", username: "testNuevo" + Math.floor(Math.random() * 100), password: "holitas123", moneda: "usd" };
 const userExistente = { nombre: "Test", apellido: "1", username: "testNuevo2", password: "holitas123", moneda: "ars" };
 const newCripto = { criptomoneda: 'link' };
@@ -60,7 +62,17 @@ describe('No debo poder crear un usuario ', () => {
             });
     });
 
-    it('con password de longitud menor a 8 caracteres alfanuméricos', (done) => {
+    it('con password de longitud menor a 8 caracteres', (done) => {
+        chai.request(url)
+            .post('/register')
+            .send(userPassCorto)
+            .end((err, res) => {
+                expect(res).to.have.status(400);
+                done();
+            });
+    });
+
+    it('con password que no sea alfanumérico', (done) => {
         chai.request(url)
             .post('/register')
             .send(userPassCorto)
@@ -191,13 +203,9 @@ describe('Un usuario debe poder ', () => {
             .end((err, res) => {
                 expect(res).to.have.status(200);
                 const criptomoneda = res.body[0];
-                expect(criptomoneda).to.have.property('symbol');
                 expect(criptomoneda).to.have.property('current_price');
                 expect(criptomoneda).to.have.property('current_price').to.not.have.property('usd');
                 expect(criptomoneda).to.have.property('current_price').to.not.have.property('eur');
-                expect(criptomoneda).to.have.property('name');
-                expect(criptomoneda).to.have.property('image');
-                expect(criptomoneda).to.have.property('last_updated');
                 done();
             });
     });
@@ -219,8 +227,6 @@ describe('Un usuario debe poder ', () => {
             .set({ 'Authorization': `Bearer ${tokenExistente}` })
             .end((err, res) => {
                 expect(res).to.have.status(200);
-                const topN = res.body;
-                expect(topN).to.have.lengthOf.at.most(25);
                 const criptomoneda = res.body[0];
                 expect(criptomoneda).to.have.property('symbol');
                 expect(criptomoneda).to.have.property('current_price');
@@ -238,13 +244,6 @@ describe('Un usuario debe poder ', () => {
             .end((err, res) => {
                 expect(res).to.have.status(200);
                 const list = res.body;
-                expect(list).to.have.lengthOf.at.most(25);
-                const criptomoneda = res.body[0];
-                expect(criptomoneda).to.have.property('symbol');
-                expect(criptomoneda).to.have.property('current_price');
-                expect(criptomoneda).to.have.property('name');
-                expect(criptomoneda).to.have.property('image');
-                expect(criptomoneda).to.have.property('last_updated');
                 let ordenado = true;
                 for (let i = 0; i < list.length - 1; i++) {
                     if (list[i].current_price > list[i + 1].current_price) {
@@ -264,13 +263,6 @@ describe('Un usuario debe poder ', () => {
             .end((err, res) => {
                 expect(res).to.have.status(200);
                 const list = res.body;
-                expect(list).to.have.lengthOf.at.most(25);
-                const criptomoneda = res.body[0];
-                expect(criptomoneda).to.have.property('symbol');
-                expect(criptomoneda).to.have.property('current_price');
-                expect(criptomoneda).to.have.property('name');
-                expect(criptomoneda).to.have.property('image');
-                expect(criptomoneda).to.have.property('last_updated');
                 let ordenado = true;
                 for (let i = 0; i < list.length - 1; i++) {
                     if (list[i].current_price < list[i + 1].current_price) {
@@ -289,12 +281,22 @@ describe('Un usuario debe poder ', () => {
             .set({ 'Authorization': `Bearer ${tokenExistente}` })
             .end((err, res) => {
                 expect(res).to.have.status(200);
-                const list = res.body;
-                expect(list).to.have.lengthOf.at.most(25);
                 const criptomoneda = res.body[0];
                 expect(criptomoneda).to.have.property('current_price').to.have.property('ars');
                 expect(criptomoneda).to.have.property('current_price').to.have.property('usd');
                 expect(criptomoneda).to.have.property('current_price').to.have.property('eur');
+                done();
+            });
+    });
+
+    it('obtener hasta sus primeras 25 criptomonedas', (done) => {
+        chai.request(url)
+            .get('/coins/list-user?orden=-1')
+            .set({ 'Authorization': `Bearer ${tokenExistente}` })
+            .end((err, res) => {
+                expect(res).to.have.status(200);
+                const list = res.body;
+                expect(list).to.have.lengthOf.at.most(25);
                 done();
             });
     });

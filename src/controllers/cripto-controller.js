@@ -8,7 +8,7 @@ const axios = require('axios');
 let criptosList = [];
 
 /**
- * Ordena el array pasado por parámetro de manera ascendente o descendente, dependiendo del órden pasado
+ * Devuelve el array pasado por parámetro ordenado de manera ascendente o descendente, dependiendo del órden pasado
  * @param {1, -1} o 1: Orden ascendente | -1: Orden descendente
  * @param {*} arr Arreglo a ordenar
  * @return Array ordenado
@@ -37,8 +37,9 @@ function ordenar(o, arr, moneda) {
 
 /**
  * Obtiene el listado de criptomonedas disponibles con sus datos desde la API de Coingecko
+ * y lo almacena en el array 'criptosList'
  */
-async function getCriptos(moneda) {
+async function getCriptos() {
     try {
         const response = await axios.get('https://api.coingecko.com/api/v3/coins');
         criptosList = [];
@@ -68,7 +69,11 @@ async function getCriptos(moneda) {
  */
 exports.listCripto = async (req, res) => {
     const moneda = req.user.moneda;
-    await getCriptos(moneda);
+    await getCriptos();
+    criptosList.forEach((elemento) => {
+        const cotizacion = elemento.current_price[moneda];
+        elemento.current_price = cotizacion;
+    });
     return res.json(criptosList);
 };
 
@@ -79,8 +84,7 @@ exports.addCripto = async (req, res) => {
     const { username } = req.user;
     const { criptomoneda } = req.body;
     const relacion = { username: username, criptomoneda: criptomoneda };
-    const moneda = req.user.moneda;
-    await getCriptos(moneda);
+    await getCriptos();
     const criptoExists = criptosList.find(elemento => elemento.symbol == relacion.criptomoneda);
     if (criptoExists) {
         await UserCripto.findOne({ username: username, criptomoneda: criptomoneda }, (err, cripto) => {
@@ -106,12 +110,15 @@ exports.addCripto = async (req, res) => {
     }
 };
 
+/**
+ * Devuelve el listado de criptomonedas añadidas por el usuario
+ */
 exports.listUserCripto = async (req, res) => {
     try {
         const { username, moneda } = req.user;
         const { orden } = req.query;
         const criptosUser = await UserCripto.find({ username: username });
-        await getCriptos(moneda);
+        await getCriptos();
         let arr = [];
         await criptosUser.forEach(async (criptoUser) => {
             const el = await criptosList.find(elemento => elemento.symbol == criptoUser.criptomoneda);
