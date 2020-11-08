@@ -6,6 +6,7 @@ let UserCripto = require('../models/usercripto');
 const axios = require('axios');
 
 let criptosList = [];
+const limiteCriptos = 25;
 
 /**
  * Devuelve el array pasado por parámetro ordenado de manera ascendente o descendente, dependiendo del órden pasado
@@ -124,7 +125,10 @@ exports.listUserCripto = async (req, res) => {
             const el = await criptosList.find(elemento => elemento.symbol == criptoUser.criptomoneda);
             arr.push(el);
         });
-        const ordenedArr = ordenar(orden, arr, moneda);
+        let ordenedArr = ordenar(orden, arr, moneda);
+        if(ordenedArr.length > limiteCriptos){
+            ordenedArr = ordenedArr.slice(0,limiteCriptos);
+        }
         return res.send(ordenedArr);
     } catch (error) {
         console.log(error);

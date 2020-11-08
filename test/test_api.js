@@ -28,7 +28,8 @@
  * v Un usuario debe poder obtener sus criptomonedas ordenadas ascendentemente en moneda preferida
  * v Un usuario debe poder obtener sus criptomonedas ordenadas descendentemente en moneda preferida
  * v Un usuario debe poder obtener sus criptomonedas con cotizacion en US$, € y AR$
- * x Un usuario debe poder obtener hasta sus primeras 25 criptomonedas
+ * v Un usuario debe poder obtener hasta sus primeras 25 criptomonedas
+ * 
  * v Un usuario no debe poder agregarse criptomonedas no disponibles
  * v Un usuario no debe poder agregarse criptomonedas que posea
  */
@@ -75,7 +76,7 @@ describe('No debo poder crear un usuario ', () => {
     it('con password que no sea alfanumérico', (done) => {
         chai.request(url)
             .post('/register')
-            .send(userPassCorto)
+            .send(userPassAlfa)
             .end((err, res) => {
                 expect(res).to.have.status(400);
                 done();
