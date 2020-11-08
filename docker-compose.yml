@@ -49,6 +49,19 @@ services:
         depends_on:
             - mongo
 
+    mongo_seed:
+        container_name: container_mongo_import
+        image: mongo
+        links:
+            - mongo
+        volumes:
+            - ./mongo-seed:/mongo-seed
+        command: /mongo-seed/import.sh
+        networks:
+            - intra-net
+        depends_on:
+            - mongo
+
 networks:
     intra-net:
         driver: bridge
