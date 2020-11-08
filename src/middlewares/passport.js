@@ -5,8 +5,7 @@
 const User = require('../models/user');
 const JwtStrategy = require('passport-jwt').Strategy,
      ExtractJwt  = require('passport-jwt').ExtractJwt;
-const config = require('../config/config');
-const userCripto = require('../models/usercripto');
+const config = require('../config/jwt');
 
 let options = {
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),

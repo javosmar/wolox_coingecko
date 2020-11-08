@@ -3,8 +3,7 @@
  */
 
 const mongoose = require('mongoose');
-const config = require('../config/config');
-const { MONGO_USERNAME, MONGO_PASSWORD } = require('../config/keys');
+const { db, MONGO_USERNAME, MONGO_PASSWORD } = require('../config/db');
 
 // Opciones para la conexión a la DB
 const options = {
@@ -19,7 +18,7 @@ const options = {
 };
 
 // Conexión a MongoDB
-mongoose.connect(config.db, options);
+mongoose.connect(db, options);
 const connection = mongoose.connection;
 connection.once('open', () => {
     console.log('Conexión a MongoDB establecida');
