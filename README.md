@@ -7,7 +7,7 @@ API desarrollada a modo de wrapper de [CoinGecko](https://www.coingecko.com/en/a
 | /register                     | POST   | { nombre, apellido, username, password, moneda } | { msg }                                                   |
 | /login                        | POST   |              { username, password }              | { msg }                                                   |
 | /api/coins/list-all           | GET    |                         -                        | { symbol,  current_price,  name,  image,  last_updated  } |
-| /api/coins/add                | POST   |            { username, criptomoneda }            | { msg }                                                   |
+| /api/coins/add                | POST   |            { criptomoneda }            | { msg }                                                   |
 | /api/coins/list-user  | GET    |                         -                        | { symbol,  current_price: { ars, usd, eur },  name,  image,  last_updated  } |
 ### /register
 Mediante este endpoint se puede registrar un nuevo usuario en el sistema. Devuelve un mensaje con la confirmación o el rechazo de la solicitud. Utilizando el método POST se debe envíar todos los datos requeridos:
