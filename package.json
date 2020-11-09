@@ -1,14 +1,14 @@
 {
   "name": "coingecko_api",
   "version": "1.0.0",
-  "description": "Ejercicio tecnico para entrevista",
-  "main": "index.js",
+  "description": "Wrapper de CoinGecko para WChallenge",
+  "main": "./src/index.js",
   "scripts": {
     "test": "mocha ./test/test_api.js --timeout 15000",
     "dev": "nodemon ./src/index.js"
   },
   "author": "Martin Acosta",
-  "license": "ISC",
+  "license": "GPL",
   "dependencies": {
     "axios": "^0.21.0",
     "bcrypt": "^5.0.0",

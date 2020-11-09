@@ -1,0 +1,188 @@
+{
+	"info": {
+		"_postman_id": "6db294c2-92ce-44d4-9159-98b3c036fad1",
+		"name": "wolox_api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "authentication",
+			"item": [
+				{
+					"name": "/register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nombre\": \"Juan\",\n    \"apellido\": \"Acosta\",\n    \"username\": \"juan2\",\n    \"password\": \"123a#asdadasda\",\n    \"moneda\": \"usd\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8000/api/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"testNuevo2\",\n    \"password\": \"holitas123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8000/api/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "extern_api",
+			"item": [
+				{
+					"name": "/api/coins/list-all",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmYTQyOWNiOWIzZTgwMDQ3ZWMwNzI4MyIsInVzZXJuYW1lIjoidGVzdG51ZXZvMiIsImlhdCI6MTYwNDg0MjUwOSwiZXhwIjoxNjA0OTI4OTA5fQ.RThfqAeXyevIrEuN3j58AYSaHsb4wX1NN0aLj0sbMlI",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/api/coins/list-all",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"coins",
+								"list-all"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/coins/add",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmYTQyOWNiOWIzZTgwMDQ3ZWMwNzI4MyIsInVzZXJuYW1lIjoidGVzdG51ZXZvMiIsImlhdCI6MTYwNDg0MjUwOSwiZXhwIjoxNjA0OTI4OTA5fQ.RThfqAeXyevIrEuN3j58AYSaHsb4wX1NN0aLj0sbMlI",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"criptomoneda\": \"bsv\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8000/api/coins/add",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"coins",
+								"add"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/coins/list-user",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmYTQyOWNiOWIzZTgwMDQ3ZWMwNzI4MyIsInVzZXJuYW1lIjoidGVzdG51ZXZvMiIsImlhdCI6MTYwNDg0MjUwOSwiZXhwIjoxNjA0OTI4OTA5fQ.RThfqAeXyevIrEuN3j58AYSaHsb4wX1NN0aLj0sbMlI",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/api/coins/list-user?orden=-1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"coins",
+								"list-user"
+							],
+							"query": [
+								{
+									"key": "orden",
+									"value": "-1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"protocolProfileBehavior": {}
+}
