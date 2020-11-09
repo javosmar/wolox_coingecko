@@ -17,26 +17,26 @@ Mediante este endpoint se puede registrar un nuevo usuario en el sistema. Devuel
 - **Password**: La contraseña de acceso debe tener al menos 8 caracteres alfanuméricos
 - **Moneda**: La moneda preferida del usuario para cotizaciones. Puede ser AR$, US$ o €
 ### /login
-Mediante este endpoint se realiza la verificación de las credenciales de usuario. En caso de tratarse de credenciales válidas devuelve un token de acceso o en caso contrario devuelve un mensaje de error. Utilizando elmétodo POST se debe enviar:
+Mediante este endpoint se realiza la verificación de las credenciales de usuario. En caso de tratarse de credenciales válidas devuelve un token de acceso o en caso contrario devuelve un mensaje de error. Utilizando el método POST se debe enviar:
 - **Username**
 - **Password**
 ### /api/coins/list-all
-Mediante una petición GET a este endpoint, se obtiene el listado con todas las criptomonedas disponibles. Para obtener una respuesta válida es necesario contar con un token de acceso. Los datos de cada criptomoneda son:
+Mediante una petición GET a este endpoint se obtiene el listado con todas las criptomonedas disponibles. Para obtener una respuesta válida es necesario contar con un token de acceso. Los datos de cada criptomoneda son:
 - Símbolo
 - Precio en la moneda preferida por el usuario
 - Nombre
 - Imagen
 - Fecha de la última actualización
 ### /api/coins/add
-Envíando una petición del tipo POST a este endpoint es posible añadir una criptmoneda al usuario, almacenando la relación en la DB. En caso de tratarse de una criptmoneda válida, devuelve la confirmación de la operación. En caso contrario devuelve un mensaje de error. Para realizar esta operación es necesario contar con un token de acceso y enviar los datos:
-- Username
+Envíando una petición del tipo POST a este endpoint es posible añadir una criptmoneda al usuario, almacenando la relación en la DB si la divisa es válida y no fue añadida previamente por el usuario. En caso de tratarse de una criptmoneda válida, devuelve la confirmación de la operación. En caso contrario devuelve un mensaje de error. Para realizar esta operación es necesario contar con un token de acceso y enviar el dato:
 - Criptmoneda
 ### /api/coins/list-user
 Este endpoint devuelve el listado de las criptomonedas añadidas por el usuario, cotizadas en AR$, US$ y €. Mediante el parámetro **orden** (el cual puede tomar el valor *1* o *-1*) se obtiene la lista ordenada de manera ascendente o descendente con respecto a la cotización en la moneda preferida por el usuario. Para obtener una respuesta válida se debe contar con un token de acceso o en caso contrario devuelve un mensaje de error. Los datos de cada criptomoneda obtenidos son:
 - Símbolo
-- Precio en AR$
-- Precio en US$
-- Precio en € 
+- Precio
+    - AR$
+    - US$
+    - € 
 - Nombre
 - Imagen
 - Fecha de la última actualización
