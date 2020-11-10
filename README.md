@@ -1,7 +1,7 @@
 Autor: Ing. Martin Acosta - 2020
 # WChallenge Cryptocurrencies
 ## Descripción 🗒
-API desarrollada a modo de wrapper de [CoinGecko](https://www.coingecko.com/en/api​) con persistencia de datos. Permite el registro e ingreso de usuarios, añadir criptmonedas de interés y obtener las cotizaciones en distintas monedas, ordenadas de manera ascendente o descendente.
+API desarrollada a modo de wrapper de [CoinGecko](https://www.coingecko.com/en/api) con persistencia de datos. Permite el registro e ingreso de usuarios, añadir criptmonedas de interés y obtener las cotizaciones en distintas monedas, ordenadas de manera ascendente o descendente.
 |            Endpoint           | Método |                  Datos Enviados                  | Datos Devueltos                                           |
 |:-----------------------------|--------|:------------------------------------------------:|-----------------------------------------------------------|
 | /register                     | POST   | { nombre, apellido, username, password, moneda } | { msg }                                                   |
