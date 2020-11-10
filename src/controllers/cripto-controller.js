@@ -10,11 +10,12 @@ const limiteCriptos = 25;
 
 /**
  * Devuelve el array pasado por parámetro ordenado de manera ascendente o descendente, dependiendo del órden pasado
+ * Por defecto el orden es descendente
  * @param {1, -1} o 1: Orden ascendente | -1: Orden descendente
  * @param {*} arr Arreglo a ordenar
  * @return Array ordenado
  */
-function ordenar(o, arr, moneda) {
+function ordenar(arr, moneda, o = -1) {
     if (o > 0) {
         arr.sort((a, b) => {
             if (a.current_price[moneda] > b.current_price[moneda])
@@ -125,7 +126,7 @@ exports.listUserCripto = async (req, res) => {
             const el = await criptosList.find(elemento => elemento.symbol == criptoUser.criptomoneda);
             arr.push(el);
         });
-        let ordenedArr = ordenar(orden, arr, moneda);
+        let ordenedArr = ordenar(arr, moneda, orden);
         if(ordenedArr.length > limiteCriptos){
             ordenedArr = ordenedArr.slice(0,limiteCriptos);
         }

@@ -259,7 +259,7 @@ describe('Un usuario debe poder ', () => {
 
     it('obtener sus criptomonedas ordenadas descendentemente en moneda preferida', (done) => {
         chai.request(url)
-            .get('/coins/list-user?orden=-1')
+            .get('/coins/list-user')
             .set({ 'Authorization': `Bearer ${tokenExistente}` })
             .end((err, res) => {
                 expect(res).to.have.status(200);
