@@ -1,0 +1,29 @@
+{
+  "name": "coingecko_api",
+  "version": "1.0.0",
+  "description": "Wrapper de CoinGecko para WChallenge",
+  "main": "./src/index.js",
+  "scripts": {
+    "test": "mocha ./test/test_api.js --timeout 15000",
+    "dev": "nodemon ./src/index.js"
+  },
+  "author": "Martin Acosta",
+  "license": "GPL",
+  "dependencies": {
+    "axios": "^0.21.0",
+    "bcrypt": "^5.0.0",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.10.11",
+    "passport": "^0.4.1",
+    "passport-jwt": "^4.0.0"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
+    "chai-jwt": "^2.0.0",
+    "mocha": "^8.2.1",
+    "morgan": "^1.10.0",
+    "nodemon": "^2.0.6"
+  }
+}

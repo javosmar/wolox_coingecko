@@ -1,0 +1,71 @@
+version: "3"
+
+services:
+    node-app:
+        image: abassi/nodejs-server:10.0-dev
+        hostname: node-app
+        container_name: container_node
+        restart: always
+        volumes:
+            - .:/home/node/app
+        networks:
+            - intra-net
+        depends_on:
+            - mongo
+        ports:
+            - "8000:8000"
+        command: "nodemon /home/node/app/src/index.js"
+
+    mongo:
+        image: mongo
+        hostname: mongo
+        container_name: container_mongo
+        restart: always
+        environment:
+            MONGO_INITDB_DATABASE: wolox_api
+            MONGO_INITDB_ROOT_USERNAME: root
+            MONGO_INITDB_ROOT_PASSWORD: rootPass
+        volumes:
+            - mongodbData:/data/db
+        networks:
+            - intra-net
+        ports:
+            - "27018:27017"
+        logging:
+            driver: none
+
+    mongo-express:
+        image: mongo-express
+        hostname: mongo-express
+        container_name: container_mongo_express
+        restart: always
+        networks:
+            - intra-net
+        ports:
+            - "8081:8081"
+        environment:
+            ME_CONFIG_MONGODB_ADMINUSERNAME: root
+            ME_CONFIG_MONGODB_ADMINPASSWORD: rootPass
+        depends_on:
+            - mongo
+
+    mongo_seed:
+        container_name: container_mongo_import
+        image: mongo
+        links:
+            - mongo
+        volumes:
+            - ./mongo-seed:/mongo-seed
+        command: /mongo-seed/import.sh
+        networks:
+            - intra-net
+        depends_on:
+            - mongo
+
+networks:
+    intra-net:
+        driver: bridge
+
+volumes:
+    mongodbData:
+        external: false
