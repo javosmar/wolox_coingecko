@@ -65,7 +65,7 @@ async function getCriptos() {
 }
 
 /**
- * Devuelve el listado de todas las criptomonedas disponibles
+ * Devuelve el listado de todas las criptomonedas disponibles cotizadas en la moneda preferida del usuario
  * @returns [{symbol, current_price, name, image, last_updated}]
  */
 exports.listCripto = async (req, res) => {
@@ -79,7 +79,7 @@ exports.listCripto = async (req, res) => {
 };
 
 /**
- * Agrega criptomonedas al usuario
+ * Agrega criptomonedas al usuario. En caso de que la relación exista, no la añade
  */
 exports.addCripto = async (req, res) => {
     const { username } = req.user;

@@ -5,7 +5,7 @@ API desarrollada a modo de wrapper de [CoinGecko](https://www.coingecko.com/en/a
 |            Endpoint           | Método |                  Datos Enviados                  | Datos Devueltos                                           |
 |:-----------------------------|--------|:------------------------------------------------:|-----------------------------------------------------------|
 | /register                     | POST   | { nombre, apellido, username, password, moneda } | { msg }                                                   |
-| /login                        | POST   |              { username, password }              | { msg }                                                   |
+| /login                        | POST   |              { username, password }              | { token }                                                   |
 | /coins/list-all           | GET    |                         -                        | { symbol,  current_price,  name,  image,  last_updated  } |
 | /coins/add                | POST   |            { criptomoneda }            | { msg }                                                   |
 | /coins/list-user  | GET    |                         -                        | { symbol,  current_price: { ars, usd, eur },  name,  image,  last_updated  } |
