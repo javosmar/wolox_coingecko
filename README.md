@@ -6,48 +6,48 @@ API desarrollada a modo de wrapper de [CoinGecko](https://www.coingecko.com/en/a
 |:-----------------------------|--------|:------------------------------------------------:|-----------------------------------------------------------|
 | /register                     | POST   | { nombre, apellido, username, password, moneda } | { msg }                                                   |
 | /login                        | POST   |              { username, password }              | { token }                                                   |
-| /coins/list-all           | GET    |                         -                        | { symbol,  current_price,  name,  image: { thumb, small, large },  last_updated  } |
+| /coins/list-all           | GET    |                         -                        | [{ symbol,  current_price,  name,  image: { thumb, small, large },  last_updated  }] |
 | /coins/add                | POST   |            { criptomoneda }            | { msg }                                                   |
-| /coins/list-user  | GET    |                         -                        | { symbol,  current_price: { ars, usd, eur },  name,  image: { thumb, small, large },  last_updated  } |
+| /coins/list-user  | GET    |                         -                        | [{ symbol,  current_price: { ars, usd, eur },  name,  image: { thumb, small, large },  last_updated  }] |
 ---
 ## Endpoints
 ### /register
 Mediante este endpoint se puede registrar un nuevo usuario en el sistema. Devuelve un mensaje con la confirmación o el rechazo de la solicitud. Utilizando el método POST se debe envíar todos los datos requeridos:
-- **Nombre**: El nombre del usuario a registrar
-- **Apellido**: El apellido del usuario a registrar
-- **Username**: El username no debe existir previamente en el sistema
-- **Password**: La contraseña de acceso debe tener al menos 8 caracteres alfanuméricos
-- **Moneda**: La moneda preferida del usuario para cotizaciones. Las opciones posibles son AR$ ('ars'), US$ ('usd') y € ('eur')
+- **nombre**: El nombre del usuario a registrar
+- **apellido**: El apellido del usuario a registrar
+- **username**: El username no debe existir previamente en el sistema
+- **password**: La contraseña de acceso debe tener al menos 8 caracteres alfanuméricos
+- **moneda**: La moneda preferida del usuario para cotizaciones. Las opciones posibles son AR$ ('ars'), US$ ('usd') y € ('eur')
 ### /login
 Mediante este endpoint se realiza la verificación de las credenciales de usuario. En caso de tratarse de credenciales válidas devuelve un token de acceso o en caso contrario devuelve un mensaje de error. Utilizando el método POST se debe enviar:
-- **Username**
-- **Password**
+- **username**
+- **password**
 ### /coins/list-all
-Mediante una petición GET a este endpoint se obtiene el listado con todas las criptomonedas disponibles. Para obtener una respuesta válida es necesario contar con un token de acceso. Los datos de cada criptomoneda son:
-- Símbolo
-- Precio en la moneda preferida por el usuario
-- Nombre
-- Imagen
-    - Miniatura
-    - Pequeño
-    - Grande
-- Fecha de la última actualización
+Mediante una petición GET a este endpoint se obtiene un array con el listado con todas las criptomonedas disponibles. Para obtener una respuesta válida es necesario contar con un token de acceso. Los datos de cada criptomoneda son:
+- **symbol**: Símbolo de la criptomoneda
+- **current_price**: Precio de la criptomoneda cotizado en la moneda preferida por el usuario
+- **name**: Nombre de la criptomoneda
+- **image**
+    - **thumb**: Imagen de la criptomoneda en tamaño miniatura
+    - **small**: Imagen de la criptomoneda en tamaño pequeño
+    - **large**: Imagen de la criptomoneda en tamaño grande
+- **last_updated**: Fecha de la última actualización de los datos
 ### /coins/add
 Envíando una petición del tipo POST a este endpoint es posible añadir una criptmoneda al usuario, almacenando la relación en la DB si la divisa es válida y no fue añadida previamente por el usuario. En caso de tratarse de una criptmoneda válida, devuelve la confirmación de la operación. En caso contrario devuelve un mensaje de error. Para realizar esta operación es necesario contar con un token de acceso y enviar el dato:
-- Criptmoneda
+- **criptomoneda**: Símbolo de la criptomoneda a añadir
 ### /coins/list-user
-Este endpoint devuelve el listado de las criptomonedas añadidas por el usuario, cotizadas en AR$, US$ y €. Mediante el parámetro **orden** (el cual puede tomar el valor *1* o *-1*) se obtiene la lista ordenada de manera ascendente o descendente con respecto a la cotización en la moneda preferida por el usuario. Para obtener una respuesta válida se debe contar con un token de acceso o en caso contrario devuelve un mensaje de error. Los datos de cada criptomoneda obtenidos son:
-- Símbolo
-- Precio
-    - AR$
-    - US$
-    - € 
-- Nombre
-- Imagen
-    - Miniatura
-    - Pequeño
-    - Grande
-- Fecha de la última actualización
+Este endpoint devuelve un array con el listado de las criptomonedas añadidas por el usuario, cotizadas en AR$, US$ y €. Mediante el parámetro **orden** (el cual puede tomar el valor *1* o *-1*) se obtiene la lista ordenada de manera ascendente o descendente con respecto a la cotización en la moneda preferida por el usuario, aunque por defecto se devuelve el array ordenado de manera descendente. Para obtener una respuesta válida se debe contar con un token de acceso o en caso contrario devuelve un mensaje de error. Los datos de cada criptomoneda obtenidos son:
+- **symbol**: Símbolo de la criptomoneda
+- **current_price**
+    - **ars**: Precio de la criptomoneda cotizado en AR$
+    - **usd**: Precio de la criptomoneda cotizado en US$
+    - **eur**: Precio de la criptomoneda cotizado en €
+- **name**: Nombre de la criptomoneda
+- **image**
+    - **thumb**: Imagen de la criptomoneda en tamaño miniatura
+    - **small**: Imagen de la criptomoneda en tamaño pequeño
+    - **large**: Imagen de la criptomoneda en tamaño grande
+- **last_updated**: Fecha de la última actualización de los datos
 ---
 ## Requisitos 🗂 
 Para correr la API se debe contar con una instalación de [NodeJS](https://nodejs.org/), [Docker](https://www.docker.com/) y [Docker Compose](https://docs.docker.com/compose/install/).
